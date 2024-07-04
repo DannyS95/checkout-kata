@@ -1,0 +1,35 @@
+services:
+  fluro-checkout:
+    build:
+      context: .
+    container_name: fluro-checkout
+    image: fluro-checkout
+    volumes:
+      - app:/app/
+    networks:
+      - app
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:8.3
+    container_name: fluro-db
+    restart: always
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_DATABASE: 'fluro-checkout'
+      MYSQL_ROOT_PASSWORD: '123'
+    ports:
+      - '3306:3306'
+    networks:
+      - app
+
+volumes:
+  app:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./
+
+networks:
+  app:
