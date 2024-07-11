@@ -12,8 +12,9 @@ class ExampleTest extends TestCase
      */
     public function test_the_application_returns_a_successful_response(): void
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+        $this->get('/items/A/add-to-cart?quantity=2');
+        $this->assertNotEmpty(session()->all());
+        $this->get('/items/A/add-to-cart?quantity=2');
+        dump(session()->all());
     }
 }

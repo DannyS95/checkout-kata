@@ -17,27 +17,27 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'A',
                 'unit_price' => 50,
-                'slug' => Str::slug('A'),
+                'slug' => Str::upper(Str::slug('A')),
             ],
             [
                 'name' => 'B',
                 'unit_price' => 75,
-                'slug' => Str::slug('B'),
+                'slug' => Str::upper(Str::slug('B')),
             ],
             [
                 'name' => 'C',
                 'unit_price' => 25,
-                'slug' => Str::slug('C'),
+                'slug' => Str::upper(Str::slug('C')),
             ],
             [
                 'name' => 'D',
                 'unit_price' => 150,
-                'slug' => Str::slug('D'),
+                'slug' => Str::upper(Str::slug('D')),
             ],
             [
                 'name' => 'E',
                 'unit_price' => 200,
-                'slug' => Str::slug('E'),
+                'slug' => Str::upper(Str::slug('E')),
             ],
         ];
 

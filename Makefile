@@ -9,10 +9,7 @@ php-artisan:
 	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'php artisan $(command)'
 
 migrate:
-	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'php artisan migrate'
-
-seed:
-$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'php artisan db:seed'
+	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'php artisan migrate:fresh --seed'
 
 composer-i:
 	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'composer install --no-interaction'
@@ -28,6 +25,9 @@ fix-laravel-perms:
 
 
 install: composer-i fix-laravel-perms migrate seed
+
+test:
+	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'vendor/bin/pest'
 
 sh:
 	$(DOCKER_EXEC) $(CONTAINER_NAME) sh
