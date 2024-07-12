@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('items_bundled_special_offers', function (Blueprint $table) {
+        Schema::create('item_bundles_special_offers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->references('id')->on('items')->onDelete('cascade');;
-            $table->foreignId('bundled_item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreignId('bundle_id')->references('id')->on('item_bundles')->onDelete('cascade');
             $table->foreignId('special_offer_id')->references('id')->on('special_offers')->onDelete('cascade');
             $table->timestamps();
         });
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('items_bundled_special_offers');
+        Schema::dropIfExists('item_bundles_special_offers');
     }
 };

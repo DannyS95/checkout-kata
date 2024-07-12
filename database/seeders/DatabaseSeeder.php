@@ -79,14 +79,22 @@ class DatabaseSeeder extends Seeder
 
         DB::table('item_special_offers')->insert($itemSpecialOffers);
 
-        $itemsBundledSpecialOffers = [
+        $itemBundles = [
             [
                 'item_id' => 4,
                 'bundled_item_id' => 5,
+            ]
+        ];
+
+        DB::table('item_bundles')->insert($itemBundles);
+
+        $itemBundlesSpecialOffers = [
+            [
+                'bundle_id' => 1,
                 'special_offer_id' => 3,
             ]
         ];
 
-        DB::table('items_bundled_special_offers')->insert($itemsBundledSpecialOffers);
+        DB::table('item_bundles_special_offers')->insert($itemBundlesSpecialOffers);
     }
 }
