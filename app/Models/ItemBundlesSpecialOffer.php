@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ItemBundlesSpecialOffer extends Model
 {
     use HasFactory;
+
+    public function bundleItemId() {
+        return $this->bundle_item_id;
+    }
 }

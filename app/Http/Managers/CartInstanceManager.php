@@ -2,7 +2,7 @@
 
 namespace App\Http\Managers;
 
-use App\Feature\Checkout\Cart;
+use App\Feature\Cart\Cart;
 use Illuminate\Support\Facades\Session;
 
 class CartInstanceManager

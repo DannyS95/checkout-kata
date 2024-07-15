@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('item_bundles_special_offers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bundle_id')->references('id')->on('item_bundles')->onDelete('cascade');
+            $table->foreignId('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreignId('bundle_item_id')->references('id')->on('items')->onDelete('cascade');
             $table->foreignId('special_offer_id')->references('id')->on('special_offers')->onDelete('cascade');
             $table->timestamps();
         });
