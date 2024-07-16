@@ -24,6 +24,6 @@ class ItemDetails
 
     public function quantityAvailableForSpecialOffers(): int
     {
-        return $this->quantity - $this->quantityUsedForSpecialOffers > 0;
+        return $this->quantity - $this->quantityUsedForSpecialOffers;
     }
 }

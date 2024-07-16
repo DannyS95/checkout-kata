@@ -12,12 +12,10 @@ class CartController extends Controller
     public function __invoke(Item $item, Request $request, CartInstanceManager $cartInstanceManager)
     {
         $cart = $cartInstanceManager->getCart();
-        $anotherItem = new Item();
-        $anotherItem = $anotherItem->find(4);
-        $cart->add(new ItemDetails($item, $request->query('quantity')));
-        $cart->add(new ItemDetails($anotherItem, 1));
 
-        $offers = $cart->loadActiveSpecialOffers();
+        $cart->add(new ItemDetails($item, $request->query('quantity')));
+
+        $cart->loadActiveSpecialOffers();
 
         $cartInstanceManager->update($cart);
 
