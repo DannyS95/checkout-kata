@@ -14,11 +14,11 @@ class Cart
     /**
      * @var Collection[SpecialOfferDetails]
      */
-    private Collection $specialOfferDetails;
+    public Collection $specialOfferDetails;
     /**
      * @var Collection[ItemDetails]
      */
-    private Collection $itemDetails;
+    public Collection $itemDetails;
 
     public function __construct()
     {
@@ -142,14 +142,16 @@ class Cart
     {
         $current = $this->findOffer($specialOffer);
         if ($current->count() > 0) {
-            $current->first()->count++;
+            $current->first()->count += $itemDetails->quantity % $specialOffer->requiredUnits();
+            $itemDetails->quantityUsedForSpecialOffers = $specialOffer->requiredUnits();
         } else {
             $specialOfferDetails = new SpecialOfferDetails(itemDetails: $itemDetails,
                 specialOffer: $specialOffer,
                 bundleDetails: $bundleDetails
             );
-
             $this->specialOfferDetails->push($specialOfferDetails);
+            $specialOfferDetails->count += $itemDetails->quantity % $specialOffer->requiredUnits();
+            $itemDetails->quantityUsedForSpecialOffers = $specialOffer->requiredUnits();
         }
     }
 }
