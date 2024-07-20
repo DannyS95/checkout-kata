@@ -12,4 +12,8 @@ class ItemBundlesSpecialOffer extends Model
     public function bundleItemId() {
         return $this->bundle_item_id;
     }
+
+    public function itemId() {
+        return $this->bundle_item_id;
+    }
 }

@@ -25,6 +25,7 @@ class Cart
         $this->specialOfferDetails = collect();
         $this->itemDetails = collect();
     }
+
     /**
      * Summary of find
      * @param \App\Models\Item $item
@@ -36,18 +37,18 @@ class Cart
             return $value->item->slug === $item->slug;
         });
     }
+
     /**
      * Summary of findOffer
      * @param \App\Models\SpecialOffer $specialOffer
      * @return \Illuminate\Support\Collection[SpecialOfferDetails]
      */
-    private function findOffer(SpecialOffer $specialOffer): Collection
+    public function findOffer(SpecialOffer $specialOffer): Collection
     {
         return $this->specialOfferDetails->filter(function(SpecialOfferDetails $value, $key)  use ($specialOffer) {
             return $value->specialOffer->id === $specialOffer->id;
         });
     }
-
 
     public function add(ItemDetails $itemDetails): self
     {
@@ -71,6 +72,14 @@ class Cart
                 $this->loadAllSpecialOfferTypes($item, $itemDetails);
             }
         }
+    }
+
+    public function findSpecialOffer(ItemDetails $itemDetails)
+    {
+        return $this->specialOfferDetails->filter(function(SpecialOfferDetails $value, $key) use ($itemDetails) {
+            $specialOfferItemDetails = $value->itemDetails ?? $value->bundleDetails->item;
+            return $specialOfferItemDetails->item->id == $itemDetails->item->id;
+        });
     }
 
     private function loadAllSpecialOfferTypes(Item $item, ItemDetails $itemDetails): void
@@ -101,6 +110,7 @@ class Cart
     private function loadItemSpecialOffers(Item $item, ItemDetails $itemDetails): self
     {
         $specialOffers = $item->itemSpecialOffers()->where('required_units', '<=', $itemDetails->quantity)->where('required_units', function($query) {
+            # @Todo order by not select raw
             $query->selectRaw('MAX(required_units)');
         });
 
@@ -143,15 +153,15 @@ class Cart
         $current = $this->findOffer($specialOffer);
         if ($current->count() > 0) {
             $current->first()->count += $itemDetails->quantity % $specialOffer->requiredUnits();
-            $itemDetails->quantityUsedForSpecialOffers = $specialOffer->requiredUnits();
+            $itemDetails->quantityUsedForSpecialOffers += $specialOffer->requiredUnits();
+            $current->increment();
         } else {
             $specialOfferDetails = new SpecialOfferDetails(itemDetails: $itemDetails,
                 specialOffer: $specialOffer,
                 bundleDetails: $bundleDetails
             );
             $this->specialOfferDetails->push($specialOfferDetails);
-            $specialOfferDetails->count += $itemDetails->quantity % $specialOffer->requiredUnits();
-            $itemDetails->quantityUsedForSpecialOffers = $specialOffer->requiredUnits();
+            $itemDetails->quantityUsedForSpecialOffers = $specialOfferDetails->count * $specialOffer->requiredUnits();
         }
     }
 }
