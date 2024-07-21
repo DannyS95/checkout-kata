@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('special_offer_id')->references('id')->on('special_offers')->onDelete('cascade');
             $table->foreignId('item_id')->references('id')->on('items')->onDelete('cascade');
-            $table->boolean('discount_single_item_applications')->nullable();
             $table->timestamps();
         });
     }

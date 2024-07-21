@@ -8,13 +8,17 @@ use App\Feature\Cart\ItemDetails;
 use Illuminate\Support\Collection;
 use App\Feature\Cart\BundleDetails;
 use App\Feature\Cart\SpecialOfferDetails;
+use App\Feature\Cart\Strategy\SpecialOfferDetailsContext;
+use App\Feature\Cart\Strategy\SpecialOfferDetailsStrategy;
+use App\Feature\Cart\Strategy\ItemSpecialOfferDetailsStrategy;
+use App\Feature\Cart\Strategy\ItemBundleSpecialOfferDetailsStrategy;
 
 class Cart
 {
     /**
-     * @var Collection[SpecialOfferDetails]
+     * @var Collection[SpecialOfferDetailsContext]
      */
-    public Collection $specialOfferDetails;
+    public Collection $specialOfferDetailsContexts;
     /**
      * @var Collection[ItemDetails]
      */
@@ -22,7 +26,7 @@ class Cart
 
     public function __construct()
     {
-        $this->specialOfferDetails = collect();
+        $this->specialOfferDetailsContexts = collect();
         $this->itemDetails = collect();
     }
 
@@ -45,8 +49,8 @@ class Cart
      */
     public function findOffer(SpecialOffer $specialOffer): Collection
     {
-        return $this->specialOfferDetails->filter(function(SpecialOfferDetails $value, $key)  use ($specialOffer) {
-            return $value->specialOffer->id === $specialOffer->id;
+        return $this->specialOfferDetailsContexts->filter(function(SpecialOfferDetailsContext $value, $key)  use ($specialOffer) {
+            return $value->specialOfferDetails->specialOffer->id === $specialOffer->id;
         });
     }
 
@@ -76,7 +80,7 @@ class Cart
 
     public function findSpecialOffer(ItemDetails $itemDetails)
     {
-        return $this->specialOfferDetails->filter(function(SpecialOfferDetails $value, $key) use ($itemDetails) {
+        return $this->specialOfferDetailsContexts->filter(function(SpecialOfferDetailsContext $value, $key) use ($itemDetails) {
             $specialOfferItemDetails = $value->itemDetails ?? $value->bundleDetails->item;
             return $specialOfferItemDetails->item->id == $itemDetails->item->id;
         });
@@ -113,7 +117,13 @@ class Cart
         $specialOffers = $item->itemSpecialOffers()->where('required_units', '<=', $itemDetails->quantity)->orderByDesc('required_units');
         if ($specialOffers->count() > 0) {
             foreach ($specialOffers->get() as $specialOffer) {
-                $this->addSpecialOfferDetailsToCart(itemDetails: $itemDetails, specialOffer: $specialOffer, bundleDetails: null);
+                $specialOfferDetails = new SpecialOfferDetails($specialOffer);
+                $itemSpecialOfferDetailsStrategy = new ItemSpecialOfferDetailsStrategy($specialOfferDetails, $itemDetails);
+                $specialOfferDetailsContext = new SpecialOfferDetailsContext(specialOfferDetailsStrategy: $itemSpecialOfferDetailsStrategy,
+                    specialOfferDetails: $specialOfferDetails,
+                    itemDetails: $itemDetails,
+                    bundleDetails: null);
+                $this->addSpecialOfferDetailsToCart( $specialOfferDetailsContext);
             }
         }
 
@@ -141,24 +151,30 @@ class Cart
                 ->first()
             );
 
-            $this->addSpecialOfferDetailsToCart(specialOffer: $specialOffer, itemDetails: null, bundleDetails: $bundleDetails);
+            $specialOfferDetails = new SpecialOfferDetails($specialOffer);
+            $itemBundleSpecialOfferDetailsStrategy = new ItemBundleSpecialOfferDetailsStrategy($specialOfferDetails, $bundleDetails);
+            $specialOfferDetailsContext = new SpecialOfferDetailsContext(specialOfferDetailsStrategy: $itemBundleSpecialOfferDetailsStrategy,
+                specialOfferDetails: $specialOfferDetails,
+                itemDetails: null,
+                bundleDetails: $bundleDetails);
+
+            $this->addSpecialOfferDetailsToCart($specialOfferDetailsContext);
         }
     }
 
-    private function addSpecialOfferDetailsToCart(SpecialOffer $specialOffer, ?ItemDetails $itemDetails, ?BundleDetails $bundleDetails): void
+    private function addSpecialOfferDetailsToCart(SpecialOfferDetailsContext $specialOfferDetailsContext): void
     {
-        $current = $this->findOffer($specialOffer);
+        $current = $this->findOffer($specialOfferDetailsContext->specialOfferDetails->specialOffer); //
         if ($current->count() > 0) {
-            $current->first()->count += $itemDetails->quantity % $specialOffer->requiredUnits();
-            $itemDetails->quantityUsedForSpecialOffers += $specialOffer->requiredUnits();
+            $current = $current->first()->specialOfferDetailsStrategy;
+            /**
+             * @var SpecialOfferDetailsStrategy $current
+             */
             $current->increment();
+            $current->useItemQuantityInSpecialOffer();
         } else {
-            $specialOfferDetails = new SpecialOfferDetails(itemDetails: $itemDetails,
-                specialOffer: $specialOffer,
-                bundleDetails: $bundleDetails
-            );
-            $this->specialOfferDetails->push($specialOfferDetails);
-            $itemDetails->quantityUsedForSpecialOffers = $specialOfferDetails->count * $specialOffer->requiredUnits();
+            $this->specialOfferDetailsContexts->push($specialOfferDetailsContext);
+            $specialOfferDetailsContext->specialOfferDetailsStrategy->useItemQuantityInSpecialOffer();
         }
     }
 }

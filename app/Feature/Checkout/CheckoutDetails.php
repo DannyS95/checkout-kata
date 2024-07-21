@@ -5,6 +5,7 @@ namespace App\Feature\Checkout;
 use App\Feature\Cart\Cart;
 use App\Feature\Cart\ItemDetails;
 use App\Feature\Cart\SpecialOfferDetails;
+use App\Feature\Cart\Strategy\SpecialOfferDetailsContext;
 
 class CheckoutDetails
 {
@@ -37,17 +38,19 @@ class CheckoutDetails
     public function getSpecialOffersCheckoutDetails(): array
     {
         $details = [];
-        foreach ($this->cart->specialOfferDetails as $specialOfferDetails) {
+        foreach ($this->cart->specialOfferDetailsContexts as $specialOfferDetailsContext) {
+            /** @var SpecialOfferDetailsContext $specialOfferDetailsContext */
             /** @var SpecialOfferDetails $specialOfferDetails */
+            $specialOfferDetails = $specialOfferDetailsContext->specialOfferDetails;
             \array_push($details, [
                 'name' => $specialOfferDetails->specialOffer->specialOfferDescription(),
                 'quantity' => $specialOfferDetails->count,
                 'items' => [
-                    $specialOfferDetails->itemDetails->item->name =>
+                    $specialOfferDetailsContext->itemDetails->item->name =>
                         [
-                            'quantityInOffer' => $specialOfferDetails->itemDetails->quantityUsedForSpecialOffers,
-                            'totalPriceWithDiscount' => $specialOfferDetails->totalPriceWithDiscount(), //
-                            'totalPriceWithoutDiscount' => $specialOfferDetails->totalPriceWithoutDiscount(),
+                            'quantityInOffer' => $specialOfferDetailsContext->itemDetails->quantityUsedForSpecialOffers,
+                            'totalPriceWithDiscount' => $specialOfferDetailsContext->specialOfferDetailsStrategy->totalPriceWithDiscount(),
+                            'totalPriceWithoutDiscount' => $specialOfferDetailsContext->specialOfferDetailsStrategy->totalPriceWithoutDiscount(),
                         ]
                 ]
 
