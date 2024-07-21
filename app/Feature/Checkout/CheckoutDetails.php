@@ -3,7 +3,6 @@
 namespace App\Feature\Checkout;
 
 use App\Feature\Cart\Cart;
-use App\Models\SpecialOffer;
 use App\Feature\Cart\ItemDetails;
 use App\Feature\Cart\SpecialOfferDetails;
 
@@ -18,15 +17,12 @@ class CheckoutDetails
         $details = [];
         foreach ($this->cart->itemDetails as $itemDetails) {
             /** @var ItemDetails $itemDetails */
-            /** @var SpecialOfferDetails $specialOfferDetails */
-            $specialOfferDetails = $this->cart->findOffer($itemDetails->item->itemBundlesSpecialOffers()->first() ?? $itemDetails->item->itemSpecialOffers()->first())->first();
             \array_push($details, [
                 'name' => $itemDetails->item->name,
                 'unitPrice' => $itemDetails->item->unitPrice(),
                 'quantity' => $itemDetails->quantity,
                 'totalPrice' => $itemDetails->totalPrice,
-                # @Todo get an array of all special offers
-                'specialOffer' => $specialOfferDetails->specialOfferDescription(),
+                'specialOffers' => $itemDetails->specialOffersDescriptions(),
             ]);
         }
 
@@ -44,7 +40,7 @@ class CheckoutDetails
         foreach ($this->cart->specialOfferDetails as $specialOfferDetails) {
             /** @var SpecialOfferDetails $specialOfferDetails */
             \array_push($details, [
-                'name' => $specialOfferDetails->specialOfferDescription(),
+                'name' => $specialOfferDetails->specialOffer->specialOfferDescription(),
                 'quantity' => $specialOfferDetails->count,
                 'items' => [
                     $specialOfferDetails->itemDetails->item->name =>

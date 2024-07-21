@@ -47,22 +47,4 @@ class SpecialOfferDetails
 
         return $this->specialOffer->discountPrice() * $this->count;
     }
-
-    public function specialOfferDescription(): string {
-        $discount = $this->specialOffer->discountPrice();
-        $units = $this->specialOffer->requiredUnits();
-
-        if ($this->specialOffer->discountPrice() == 0.00) {
-            return "Buy {$units}, get one Free ";
-        }
-
-        if ($this->specialOffer->requiredUnits()) {
-            return "Buy {$units}, for {$discount}£";
-        }
-
-        $itemBundle = $this->specialOffer->itemBundle()->first()->bundleItemId();
-        $item = $this->specialOffer->itemBundle()->first()->itemId();
-
-        return "Buy {$item} and {$itemBundle} for {$discount}£";
-    }
 }

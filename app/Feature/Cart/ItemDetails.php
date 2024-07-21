@@ -3,6 +3,7 @@
 namespace App\Feature\Cart;
 
 use App\Models\Item;
+use App\Models\SpecialOffer;
 
 class ItemDetails
 {
@@ -26,4 +27,20 @@ class ItemDetails
     {
         return $this->quantity - $this->quantityUsedForSpecialOffers;
     }
+
+    public function specialOffersDescriptions(): array
+    {
+        $collect = collect([$this->item->itemBundlesSpecialOffers, $this->item->itemSpecialOffers])->filter(function($value, $key) {
+            return $value->count() > 0;
+        })->flatten();
+
+        $descriptions = [];
+        foreach ($collect as $specialOffer) {
+            /** @var SpecialOffer $specialOffer */
+           $descriptions[] = $specialOffer->specialOfferDescription();
+        }
+
+        return $descriptions;
+    }
+
 }

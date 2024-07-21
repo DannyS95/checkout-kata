@@ -84,6 +84,7 @@ class Cart
 
     private function loadAllSpecialOfferTypes(Item $item, ItemDetails $itemDetails): void
     {
+        /** @Todo Handle this as one merged collection */
         $this->loadItemSpecialOffers($item, $itemDetails)
             ->loadItemBundlesOffers($item, $itemDetails);
     }
@@ -109,11 +110,7 @@ class Cart
 
     private function loadItemSpecialOffers(Item $item, ItemDetails $itemDetails): self
     {
-        $specialOffers = $item->itemSpecialOffers()->where('required_units', '<=', $itemDetails->quantity)->where('required_units', function($query) {
-            # @Todo order by not select raw
-            $query->selectRaw('MAX(required_units)');
-        });
-
+        $specialOffers = $item->itemSpecialOffers()->where('required_units', '<=', $itemDetails->quantity)->orderByDesc('required_units');
         if ($specialOffers->count() > 0) {
             foreach ($specialOffers->get() as $specialOffer) {
                 $this->addSpecialOfferDetailsToCart(itemDetails: $itemDetails, specialOffer: $specialOffer, bundleDetails: null);

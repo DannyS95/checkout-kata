@@ -23,4 +23,23 @@ class SpecialOffer extends Model
     {
         return $this->belongsTo(ItemBundlesSpecialOffer::class, 'id', 'special_offer_id');
     }
+
+    public function specialOfferDescription(): string {
+        $discount = $this->discountPrice();
+        $units = $this->requiredUnits();
+
+        if ($this->discountPrice() == 0.00) {
+            return "Buy {$units}, get one Free ";
+        }
+
+        if ($this->requiredUnits()) {
+            return "Buy {$units}, for {$discount}£";
+        }
+
+        $itemBundle = $this->itemBundle()->first()->bundleItemId();
+        $item = $this->itemBundle()->first()->itemId();
+
+        return "Buy {$item} and {$itemBundle} for {$discount}£";
+    }
+
 }
