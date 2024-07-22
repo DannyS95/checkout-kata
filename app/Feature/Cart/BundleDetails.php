@@ -8,10 +8,10 @@ class BundleDetails
     {
     }
 
-    public function getQuantity()
+    public function calculateBundleQuantity()
     {
-        return ($this->item->quantityAvailableForSpecialOffers() +
-            $this->bundleItem->quantityAvailableForSpecialOffers()) /
-        2;
+        $min = min($this->item->quantityAvailableForSpecialOffers(), $this->bundleItem->quantityAvailableForSpecialOffers());
+
+        return intval($min > 1 ? $min : 2 / 2);
     }
 }

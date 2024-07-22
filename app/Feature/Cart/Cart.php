@@ -139,18 +139,11 @@ class Cart
                 })
                 ->first();
 
-            $bundleItemDetails->quantityUsedForSpecialOffers++;
-            $itemDetails->quantityUsedForSpecialOffers++;
-
             $bundleDetails = new BundleDetails(
                 $itemDetails,
-                $this->itemDetails
-                    ->filter(function(ItemDetails $value , $key) use ($specialOffer) {
-                        return $specialOffer->itemBundle()->first()->bundleItemId() === $value->item->id;
-                })
-                ->first()
+                $bundleItemDetails
             );
-
+            
             $specialOfferDetails = new SpecialOfferDetails($specialOffer);
             $itemBundleSpecialOfferDetailsStrategy = new ItemBundleSpecialOfferDetailsStrategy($specialOfferDetails, $bundleDetails);
             $specialOfferDetailsContext = new SpecialOfferDetailsContext(specialOfferDetailsStrategy: $itemBundleSpecialOfferDetailsStrategy,

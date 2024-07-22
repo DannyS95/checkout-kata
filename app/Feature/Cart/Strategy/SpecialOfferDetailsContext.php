@@ -15,5 +15,6 @@ class SpecialOfferDetailsContext
     ) {
         $this->specialOfferDetailsStrategy->checkThroughItemDetailsPolicy();
         $this->specialOfferDetailsStrategy->increment();
+        $this->specialOfferDetailsStrategy->useItemQuantityInSpecialOffer();
     }
 }

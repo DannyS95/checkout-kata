@@ -9,12 +9,12 @@ class SpecialOffer extends Model
 {
     use HasFactory;
 
-    public function discountPrice()
+    public function discountPrice(): float
     {
         return $this->offer_discount_price;
     }
 
-    public function requiredUnits()
+    public function requiredUnits(): int
     {
         return $this->required_units;
     }

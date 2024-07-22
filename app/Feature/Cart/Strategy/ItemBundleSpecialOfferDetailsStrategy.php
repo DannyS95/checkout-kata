@@ -24,7 +24,7 @@ class ItemBundleSpecialOfferDetailsStrategy implements SpecialOfferDetailsStrate
 
     public function increment(): void
     {
-        $this->specialOfferDetails->count += $this->bundleDetails->getQuantity();
+        $this->specialOfferDetails->count += $this->bundleDetails->calculateBundleQuantity();
     }
 
     public function totalPriceWithDiscount(): float
@@ -34,6 +34,7 @@ class ItemBundleSpecialOfferDetailsStrategy implements SpecialOfferDetailsStrate
 
     public function useItemQuantityInSpecialOffer(): void
     {
-        $this->bundleDetails->item->quantityUsedForSpecialOffers += $this->bundleDetails->getQuantity();
+        $this->bundleDetails->item->quantityUsedForSpecialOffers += $this->bundleDetails->calculateBundleQuantity();
+        $this->bundleDetails->bundleItem->quantityUsedForSpecialOffers += $this->bundleDetails->calculateBundleQuantity();
     }
 }

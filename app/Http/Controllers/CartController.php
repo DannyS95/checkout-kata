@@ -24,8 +24,6 @@ class CartController extends Controller
 
         $specialOfferDetails = $checkoutDetails->getSpecialOffersCheckoutDetails();
 
-        dd($specialOfferDetails);
-
         $cartInstanceManager->update($cart);
 
         return response(200);
