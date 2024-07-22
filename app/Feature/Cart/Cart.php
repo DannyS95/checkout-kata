@@ -143,7 +143,7 @@ class Cart
                 $itemDetails,
                 $bundleItemDetails
             );
-            
+
             $specialOfferDetails = new SpecialOfferDetails($specialOffer);
             $itemBundleSpecialOfferDetailsStrategy = new ItemBundleSpecialOfferDetailsStrategy($specialOfferDetails, $bundleDetails);
             $specialOfferDetailsContext = new SpecialOfferDetailsContext(specialOfferDetailsStrategy: $itemBundleSpecialOfferDetailsStrategy,
@@ -167,7 +167,6 @@ class Cart
             $current->useItemQuantityInSpecialOffer();
         } else {
             $this->specialOfferDetailsContexts->push($specialOfferDetailsContext);
-            $specialOfferDetailsContext->specialOfferDetailsStrategy->useItemQuantityInSpecialOffer();
         }
     }
 }
