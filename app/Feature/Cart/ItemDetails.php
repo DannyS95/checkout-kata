@@ -17,10 +17,9 @@ class ItemDetails
         $this->quantityUsedForSpecialOffers = 0;
     }
 
-    public function calculateTotalPrice(): self
+    public function calculateTotalPrice()
     {
         $this->totalPrice = $this->quantity * $this->item->unitPrice();
-        return $this;
     }
 
     public function quantityAvailableForSpecialOffers(): int
@@ -42,5 +41,11 @@ class ItemDetails
 
         return $descriptions;
     }
+
+    public function finalPrice(): float
+    {
+        return $this->item->unitPrice() * $this->quantityAvailableForSpecialOffers();
+    }
+
 
 }

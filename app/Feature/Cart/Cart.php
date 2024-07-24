@@ -117,7 +117,7 @@ class Cart
         $specialOffers = $item->itemSpecialOffers()->where('required_units', '<=', $itemDetails->quantity)->orderByDesc('required_units');
         if ($specialOffers->count() > 0) {
             foreach ($specialOffers->get() as $specialOffer) {
-                $specialOfferDetails = new SpecialOfferDetails($specialOffer);
+                $specialOfferDetails = new SpecialOfferDetails($specialOffer, $itemDetails);
                 $itemSpecialOfferDetailsStrategy = new ItemSpecialOfferDetailsStrategy($specialOfferDetails, $itemDetails);
                 $specialOfferDetailsContext = new SpecialOfferDetailsContext(specialOfferDetailsStrategy: $itemSpecialOfferDetailsStrategy,
                     specialOfferDetails: $specialOfferDetails,
@@ -144,7 +144,7 @@ class Cart
                 $bundleItemDetails
             );
 
-            $specialOfferDetails = new SpecialOfferDetails($specialOffer);
+            $specialOfferDetails = new SpecialOfferDetails($specialOffer, $itemDetails);
             $itemBundleSpecialOfferDetailsStrategy = new ItemBundleSpecialOfferDetailsStrategy($specialOfferDetails, $bundleDetails);
             $specialOfferDetailsContext = new SpecialOfferDetailsContext(specialOfferDetailsStrategy: $itemBundleSpecialOfferDetailsStrategy,
                 specialOfferDetails: $specialOfferDetails,
@@ -168,5 +168,53 @@ class Cart
         } else {
             $this->specialOfferDetailsContexts->push($specialOfferDetailsContext);
         }
+    }
+
+    public function getFinalPrice()
+    {
+        $price = 0;
+
+        foreach ($this->specialOfferDetailsContexts as $specialOfferContext) {
+            /** @var SpecialOfferDetailsContext $specialOfferContext */
+            $price += $specialOfferContext->getFinalPrice();
+        }
+
+        return $price;
+    }
+
+    public function discountsTotal()
+    {
+        $total = 0;
+
+        foreach ($this->specialOfferDetailsContexts as $specialOfferContext) {
+            /** @var SpecialOfferDetailsContext $specialOfferContext */
+            $specialOfferDetails = $specialOfferContext->specialOfferDetails;
+            $total += $specialOfferDetails->getTotalDiscountValue();
+        }
+
+        return $total;
+    }
+
+    public function getItemsTotal()
+    {
+        $total = 0;
+
+        foreach ($this->itemDetails as $itemDetails) {
+            /** @var ItemDetails $itemDetails */
+            $total += $itemDetails->totalPrice;
+        }
+
+        return $total;
+    }
+
+    public function collectSpecialOfferDescriptions()
+    {
+        $descriptions = [];
+        foreach ($this->specialOfferDetailsContexts as $specialOfferDetailsContexts) {
+            /** @var SpecialOfferDetailsContext $specialOfferDetailsContexts */
+           $descriptions[] = $specialOfferDetailsContexts->specialOfferDetails->specialOffer->specialOfferDescription();
+        }
+
+        return $descriptions;
     }
 }

@@ -15,7 +15,7 @@ class CartController extends Controller
         $cart = $cartInstanceManager->getCart();
 
         $cart->add(new ItemDetails($item, $request->query('quantity')));
-        
+
         $cart->loadActiveSpecialOffers();
 
         $checkoutDetails = new CheckoutDetails($cart);
@@ -23,6 +23,8 @@ class CartController extends Controller
         $itemDetails = $checkoutDetails->getItemCheckoutDetails();
 
         $specialOfferDetails = $checkoutDetails->getSpecialOffersCheckoutDetails();
+
+        $finalCheckoutDetails = $checkoutDetails->getFinalCheckoutDetails();
 
         $cartInstanceManager->update($cart);
 

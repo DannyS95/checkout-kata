@@ -23,6 +23,7 @@ class CheckoutDetails
                 'unitPrice' => $itemDetails->item->unitPrice(),
                 'quantity' => $itemDetails->quantity,
                 'totalPrice' => $itemDetails->totalPrice,
+                # apply small fix
                 'specialOffers' => $itemDetails->specialOffersDescriptions(),
             ]);
         }
@@ -32,7 +33,12 @@ class CheckoutDetails
 
     public function getFinalCheckoutDetails()
     {
-
+        dd([
+            'totalPrice' => $this->cart->getFinalPrice(),
+            'totalItemsPrice' => $this->cart->getItemsTotal(),
+            'specialOffersApplied' => $this->cart->collectSpecialOfferDescriptions(),
+                        'totalInDiscounts' => $this->cart->discountsTotal(),
+        ]);
     }
 
     public function getSpecialOffersCheckoutDetails(): array

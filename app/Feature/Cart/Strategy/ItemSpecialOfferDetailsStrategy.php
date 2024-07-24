@@ -37,8 +37,11 @@ class ItemSpecialOfferDetailsStrategy implements SpecialOfferDetailsStrategy
 
     public function useItemQuantityInSpecialOffer(): void
     {
-        $fits = (int) ($this->itemDetails->quantity / $this->specialOfferDetails->specialOffer->requiredUnits());
+        $this->itemDetails->quantityUsedForSpecialOffers += $this->unitsUsedInSpecialOffer() * $this->specialOfferDetails->specialOffer->requiredUnits();
+    }
 
-        $this->itemDetails->quantityUsedForSpecialOffers += $fits * $this->specialOfferDetails->specialOffer->requiredUnits();
+    public function unitsUsedInSpecialOffer(): int
+    {
+        return $this->itemDetails->quantity / $this->specialOfferDetails->specialOffer->requiredUnits();
     }
 }
