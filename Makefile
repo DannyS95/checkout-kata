@@ -8,6 +8,12 @@ CONTAINER_NAME := fluro-checkout
 php-artisan:
 	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'php artisan $(command)'
 
+artisan-key-generate:
+	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'php artisan key:generate'
+
+env:
+	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'cp .env.example .env'
+
 migrate:
 	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'php artisan migrate:fresh --seed'
 
@@ -24,7 +30,7 @@ fix-laravel-perms:
 	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'chmod -R 777 storage database'
 
 
-install: composer-i fix-laravel-perms migrate
+install: composer-i fix-laravel-perms env migrate artisan-key-generate
 
 test:
 	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'vendor/bin/pest'
