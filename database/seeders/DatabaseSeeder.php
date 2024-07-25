@@ -68,12 +68,10 @@ class DatabaseSeeder extends Seeder
             [
                 'item_id' => 2,
                 'special_offer_id' => 1,
-                'discount_single_item_applications' => null,
             ],
             [
                 'item_id' => 3,
                 'special_offer_id' => 2,
-                'discount_single_item_applications' => 1,
             ],
         ];
 

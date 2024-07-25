@@ -194,7 +194,7 @@ it('in the checkout details, the total price is, the sum of the special offer, a
 it('check special offer quantity is correct, at the end of the checkout', function (string $item, int $quantity) {
     $url = get($item, $quantity);
     $resp = $this->get($url);
-    dd($resp);
+
     $end = $resp['finalCheckoutDetails'];
     $special = $resp['specialOfferDetails'][0];
 
