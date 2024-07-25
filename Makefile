@@ -24,7 +24,7 @@ fix-laravel-perms:
 	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'chmod -R 777 storage database'
 
 
-install: composer-i fix-laravel-perms migrate seed
+install: composer-i fix-laravel-perms migrate
 
 test:
 	$(DOCKER_EXEC) $(CONTAINER_NAME) sh -c 'vendor/bin/pest'
