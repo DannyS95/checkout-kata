@@ -31,6 +31,28 @@ it('is possible to add one or many products to the cart, with given quantity', f
         ['E', 1],
     ]);
 
+
+it('cart can hold multiple items at once', function (array $items) {
+    $resp = [];
+    foreach ($items as $item) {
+        $url = get($item['name'], $item['quantity']);
+        $resp = $this->get($url)['itemDetails'];
+    }
+    expect($resp)->toHaveCount(3);
+    expect($resp[0])->toBeArray();
+    expect($resp[1])->toBeArray();
+})
+    ->with([
+        [
+            [
+                ['name' => 'E', 'quantity' => 2],
+                ['name' => 'C', 'quantity' => 2],
+                ['name' => 'B', 'quantity' => 1],
+
+            ],
+        ],
+    ]);
+
 it('item total price is quantity multiplied by unit price', function (string $item, int $quantity) {
     $url = get($item, $quantity);
     $response = $this->get($url)['itemDetails'][0];

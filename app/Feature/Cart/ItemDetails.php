@@ -29,7 +29,7 @@ class ItemDetails
 
     public function specialOffersDescriptions(): array
     {
-        $collect = collect([$this->item->itemBundlesSpecialOffers, $this->item->itemSpecialOffers])->filter(function($value, $key) {
+        $collect = collect([$this->item->itemBundlesSpecialOffers, $this->item->itemBundlesBundledItemSpecialOffers, $this->item->itemSpecialOffers])->filter(function($value, $key) {
             return $value->count() > 0;
         })->flatten();
 

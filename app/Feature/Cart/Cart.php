@@ -123,7 +123,7 @@ class Cart
                     specialOfferDetails: $specialOfferDetails,
                     itemDetails: $itemDetails,
                     bundleDetails: null);
-                $this->addSpecialOfferDetailsToCart( $specialOfferDetailsContext);
+                $this->addSpecialOfferDetailsToCart($specialOfferDetailsContext);
             }
         }
 
@@ -164,6 +164,7 @@ class Cart
              * @var SpecialOfferDetailsStrategy $current
              */
             $current->increment();
+
             $current->useItemQuantityInSpecialOffer();
         } else {
             $this->specialOfferDetailsContexts->push($specialOfferDetailsContext);

@@ -14,6 +14,10 @@ class Item extends Model
         return $this->hasManyThrough(SpecialOffer::class, ItemSpecialOffer::class, 'item_id', 'id', 'id', 'special_offer_id');
     }
 
+    public function itemBundlesBundledItemSpecialOffers()
+    {
+        return $this->hasManyThrough(SpecialOffer::class, ItemBundlesSpecialOffer::class, 'bundle_item_id', 'id', 'id', 'special_offer_id');
+    }
     public function itemBundlesSpecialOffers()
     {
         return $this->hasManyThrough(SpecialOffer::class, ItemBundlesSpecialOffer::class, 'item_id', 'id', 'id', 'special_offer_id');
