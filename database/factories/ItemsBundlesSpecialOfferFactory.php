@@ -2,20 +2,20 @@
 
 namespace Database\Factories;
 
-use App\Models\ItemsBundledSpecialOffer;
+use App\Models\ItemBundlesSpecialOffer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
-class ItemsBundledSpecialOffersFactory extends Factory
+class ItemsBundlesSpecialOfferFactoryFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var class-string<\Illuminate\Database\Eloquent\Model>
      */
-    protected $model = ItemsBundledSpecialOffer::class;
+    protected $model = ItemBundlesSpecialOffer::class;
     /**
      * Define the model's default state.
      *

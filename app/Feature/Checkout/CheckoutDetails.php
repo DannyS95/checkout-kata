@@ -23,7 +23,6 @@ class CheckoutDetails
                 'unitPrice' => $itemDetails->item->unitPrice(),
                 'quantity' => $itemDetails->quantity,
                 'totalPrice' => $itemDetails->totalPrice,
-                # apply small fix
                 'specialOffers' => $itemDetails->specialOffersDescriptions(),
             ]);
         }
@@ -33,32 +32,39 @@ class CheckoutDetails
 
     public function getFinalCheckoutDetails()
     {
-        dd([
+        return[
             'totalPrice' => $this->cart->getFinalPrice(),
-            'totalItemsPrice' => $this->cart->getItemsTotal(),
+            'itemsTotal' => $this->cart->getItemsTotal(),
             'specialOffersApplied' => $this->cart->collectSpecialOfferDescriptions(),
-                        'totalInDiscounts' => $this->cart->discountsTotal(),
-        ]);
+            'discountsTotal' => $this->cart->discountsTotal(),
+        ];
     }
 
     public function getSpecialOffersCheckoutDetails(): array
     {
         $details = [];
+
         foreach ($this->cart->specialOfferDetailsContexts as $specialOfferDetailsContext) {
             /** @var SpecialOfferDetailsContext $specialOfferDetailsContext */
             /** @var SpecialOfferDetails $specialOfferDetails */
             $specialOfferDetails = $specialOfferDetailsContext->specialOfferDetails;
             \array_push($details, [
-                'name' => $specialOfferDetails->specialOffer->specialOfferDescription(),
+                'name' => $specialOfferDetails->specialOffer->specialOfferDescription($specialOfferDetails->itemDetails->item->name),
                 'quantity' => $specialOfferDetails->count,
-                'items' => [
-                    $specialOfferDetailsContext->itemDetails->item->name =>
-                        [
-                            'quantityInOffer' => $specialOfferDetailsContext->itemDetails->quantityUsedForSpecialOffers,
-                            'totalPriceWithDiscount' => $specialOfferDetailsContext->specialOfferDetailsStrategy->totalPriceWithDiscount(),
-                            'totalPriceWithoutDiscount' => $specialOfferDetailsContext->specialOfferDetailsStrategy->totalPriceWithoutDiscount(),
-                        ]
-                ]
+                'totalPriceWithDiscount' => $specialOfferDetailsContext->specialOfferDetailsStrategy->totalPriceWithDiscount(),
+                'totalPriceWithoutDiscount' => $specialOfferDetailsContext->specialOfferDetailsStrategy->totalPriceWithoutDiscount(),
+                'items' => array_filter([
+                    $specialOfferDetails->itemDetails->item->name => [
+                        'quantityInOffer' => $specialOfferDetails->itemDetails->quantityUsedForSpecialOffers,
+                        'unitPrice' => $specialOfferDetails->itemDetails->item->unitPrice(),
+                    ],
+                    $specialOfferDetailsContext->bundleDetails?->bundleItem->item->name => [
+                        'quantityInOffer' => $specialOfferDetailsContext->bundleDetails?->bundleItem->quantityUsedForSpecialOffers,
+                        'unitPrice' => $specialOfferDetailsContext->bundleDetails?->bundleItem->item->unitPrice(),
+                    ],
+                ], function($value, $key) {
+                    return $key !== "";
+                }, ARRAY_FILTER_USE_BOTH)
 
             ]);
         }

@@ -19,12 +19,12 @@ class ItemBundleSpecialOfferDetailsStrategy implements SpecialOfferDetailsStrate
 
     public function totalPriceWithoutDiscount(): float
     {
-        return $this->bundleDetails->item->item->unitPrice() + $this->bundleDetails->bundleItem->item->unitPrice() * $this->specialOfferDetails->count;
+        return ($this->bundleDetails->item->item->unitPrice() + $this->bundleDetails->bundleItem->item->unitPrice()) * $this->specialOfferDetails->count;
     }
 
     public function increment(): void
     {
-        $this->specialOfferDetails->count += $this->bundleDetails->calculateBundleQuantity();
+        $this->specialOfferDetails->count += $this->bundleDetails->calculateQuantity();
     }
 
     public function totalPriceWithDiscount(): float
@@ -34,7 +34,13 @@ class ItemBundleSpecialOfferDetailsStrategy implements SpecialOfferDetailsStrate
 
     public function useItemQuantityInSpecialOffer(): void
     {
-        $this->bundleDetails->item->quantityUsedForSpecialOffers += $this->bundleDetails->calculateBundleQuantity();
-        $this->bundleDetails->bundleItem->quantityUsedForSpecialOffers += $this->bundleDetails->calculateBundleQuantity();
+        $val = $this->bundleDetails->calculateQuantity();
+        $this->bundleDetails->item->quantityUsedForSpecialOffers += $val;
+        $this->bundleDetails->bundleItem->quantityUsedForSpecialOffers += $val;
+    }
+
+    public function getFinalPrice(): float
+    {
+        return $this->specialOfferDetails->specialOffer->discountPrice() * $this->specialOfferDetails->count;
     }
 }

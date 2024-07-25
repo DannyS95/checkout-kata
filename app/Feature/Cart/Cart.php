@@ -176,7 +176,7 @@ class Cart
 
         foreach ($this->specialOfferDetailsContexts as $specialOfferContext) {
             /** @var SpecialOfferDetailsContext $specialOfferContext */
-            $price += $specialOfferContext->getFinalPrice();
+            $price += $specialOfferContext->specialOfferDetailsStrategy->getFinalPrice();
         }
 
         return $price;
@@ -210,9 +210,14 @@ class Cart
     public function collectSpecialOfferDescriptions()
     {
         $descriptions = [];
-        foreach ($this->specialOfferDetailsContexts as $specialOfferDetailsContexts) {
-            /** @var SpecialOfferDetailsContext $specialOfferDetailsContexts */
-           $descriptions[] = $specialOfferDetailsContexts->specialOfferDetails->specialOffer->specialOfferDescription();
+        foreach ($this->specialOfferDetailsContexts as $specialOfferDetailsContext) {
+            /** @var SpecialOfferDetailsContext $specialOfferDetailsContext */
+           $descriptions[
+                $specialOfferDetailsContext
+                    ->specialOfferDetails
+                    ->specialOffer->specialOfferDescription($specialOfferDetailsContext->itemDetails?->item->name)] = [
+                        'quantity' => $specialOfferDetailsContext->specialOfferDetails->count,
+                    ];
         }
 
         return $descriptions;

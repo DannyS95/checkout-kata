@@ -28,6 +28,10 @@ class CartController extends Controller
 
         $cartInstanceManager->update($cart);
 
-        return response(200);
+        return response()->json([
+            'itemDetails' => $itemDetails,
+            'specialOfferDetails' => $specialOfferDetails,
+            'finalCheckoutDetails' => $finalCheckoutDetails,
+        ])->setStatusCode(200);
     }
 }

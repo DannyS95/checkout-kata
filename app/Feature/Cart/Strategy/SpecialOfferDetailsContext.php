@@ -17,13 +17,4 @@ class SpecialOfferDetailsContext
         $this->specialOfferDetailsStrategy->increment();
         $this->specialOfferDetailsStrategy->useItemQuantityInSpecialOffer();
     }
-
-    public function getFinalPrice(): float
-    {
-        if ($this->specialOfferDetails->specialOffer->discountPrice() > 0) {
-            return $this->itemDetails->totalPrice - $this->specialOfferDetails->getTotalDiscountValue();
-        }
-
-        return $this->itemDetails->totalPrice - $this->specialOfferDetails->getTotalDiscountValue();
-    }
 }

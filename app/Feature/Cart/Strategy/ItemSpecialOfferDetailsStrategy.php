@@ -44,4 +44,13 @@ class ItemSpecialOfferDetailsStrategy implements SpecialOfferDetailsStrategy
     {
         return $this->itemDetails->quantity / $this->specialOfferDetails->specialOffer->requiredUnits();
     }
+
+    public function getFinalPrice(): float
+    {
+        if ($this->specialOfferDetails->specialOffer->discountPrice() > 0) {
+            return $this->itemDetails->totalPrice - $this->specialOfferDetails->getTotalDiscountValue();
+        }
+
+        return $this->itemDetails->totalPrice - $this->specialOfferDetails->getTotalDiscountValue();
+    }
 }

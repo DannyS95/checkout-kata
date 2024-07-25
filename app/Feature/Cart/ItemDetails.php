@@ -46,6 +46,4 @@ class ItemDetails
     {
         return $this->item->unitPrice() * $this->quantityAvailableForSpecialOffers();
     }
-
-
 }

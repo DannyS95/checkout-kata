@@ -14,4 +14,6 @@ interface SpecialOfferDetailsStrategy
     public function totalPriceWithDiscount(): float;
 
     public function useItemQuantityInSpecialOffer(): void;
+
+    public function getFinalPrice(): float;
 }
