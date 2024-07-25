@@ -4,7 +4,6 @@ namespace App\Feature\Cart\Strategy;
 
 interface SpecialOfferDetailsStrategy
 {
-
     public function checkThroughItemDetailsPolicy(): void;
 
     public function totalPriceWithoutDiscount(): float;

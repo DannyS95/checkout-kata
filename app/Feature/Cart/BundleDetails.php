@@ -2,7 +2,7 @@
 
 namespace App\Feature\Cart;
 
-class BundleDetails
+final class BundleDetails
 {
     public function __construct(public ItemDetails $item, public ItemDetails $bundleItem)
     {

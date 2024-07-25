@@ -5,7 +5,7 @@ namespace App\Feature\Cart;
 use App\Models\Item;
 use App\Models\SpecialOffer;
 
-class ItemDetails
+final class ItemDetails
 {
     public float $totalPrice;
 

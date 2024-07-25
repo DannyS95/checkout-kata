@@ -4,7 +4,7 @@ namespace App\Feature\Cart;
 
 use App\Models\SpecialOffer;
 
-class SpecialOfferDetails
+final class SpecialOfferDetails
 {
     public bool $isPromoEligeable;
     public int $count = 0;

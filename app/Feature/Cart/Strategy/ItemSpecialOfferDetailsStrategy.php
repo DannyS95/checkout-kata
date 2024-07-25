@@ -5,7 +5,7 @@ namespace App\Feature\Cart\Strategy;
 use App\Feature\Cart\ItemDetails;
 use App\Feature\Cart\SpecialOfferDetails;
 
-class ItemSpecialOfferDetailsStrategy implements SpecialOfferDetailsStrategy
+final class ItemSpecialOfferDetailsStrategy implements SpecialOfferDetailsStrategy
 {
     public function __construct(public SpecialOfferDetails $specialOfferDetails, public ItemDetails $itemDetails) {
     }

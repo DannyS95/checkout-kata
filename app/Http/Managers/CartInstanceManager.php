@@ -5,7 +5,7 @@ namespace App\Http\Managers;
 use App\Feature\Cart\Cart;
 use Illuminate\Support\Facades\Session;
 
-class CartInstanceManager
+final class CartInstanceManager
 {
     protected $sessionKey = 'cart';
     private ?Cart $cart;

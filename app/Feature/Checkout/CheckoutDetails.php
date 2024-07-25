@@ -7,7 +7,7 @@ use App\Feature\Cart\ItemDetails;
 use App\Feature\Cart\SpecialOfferDetails;
 use App\Feature\Cart\Strategy\SpecialOfferDetailsContext;
 
-class CheckoutDetails
+final class CheckoutDetails
 {
     public function __construct(
         private Cart $cart
@@ -30,7 +30,7 @@ class CheckoutDetails
         return $details;
     }
 
-    public function getFinalCheckoutDetails()
+    public function getFinalCheckoutDetails(): array
     {
         return[
             'totalPrice' => $this->cart->getFinalPrice(),

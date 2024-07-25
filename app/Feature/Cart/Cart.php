@@ -13,7 +13,7 @@ use App\Feature\Cart\Strategy\SpecialOfferDetailsStrategy;
 use App\Feature\Cart\Strategy\ItemSpecialOfferDetailsStrategy;
 use App\Feature\Cart\Strategy\ItemBundleSpecialOfferDetailsStrategy;
 
-class Cart
+final class Cart
 {
     /**
      * @var Collection[SpecialOfferDetailsContext]
@@ -47,7 +47,7 @@ class Cart
      * @param \App\Models\SpecialOffer $specialOffer
      * @return \Illuminate\Support\Collection[SpecialOfferDetails]
      */
-    public function findOffer(SpecialOffer $specialOffer): Collection
+    private function findOffer(SpecialOffer $specialOffer): Collection
     {
         return $this->specialOfferDetailsContexts->filter(function(SpecialOfferDetailsContext $value, $key)  use ($specialOffer) {
             return $value->specialOfferDetails->specialOffer->id === $specialOffer->id;
@@ -77,15 +77,7 @@ class Cart
             }
         }
     }
-
-    public function findSpecialOffer(ItemDetails $itemDetails)
-    {
-        return $this->specialOfferDetailsContexts->filter(function(SpecialOfferDetailsContext $value, $key) use ($itemDetails) {
-            $specialOfferItemDetails = $value->itemDetails ?? $value->bundleDetails->item;
-            return $specialOfferItemDetails->item->id == $itemDetails->item->id;
-        });
-    }
-
+    
     private function loadAllSpecialOfferTypes(Item $item, ItemDetails $itemDetails): void
     {
         /** @Todo Handle this as one merged collection */

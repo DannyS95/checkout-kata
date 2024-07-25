@@ -8,7 +8,7 @@ use App\Feature\Cart\ItemDetails;
 use App\Feature\Checkout\CheckoutDetails;
 use App\Http\Managers\CartInstanceManager;
 
-class CartController extends Controller
+final class CartController extends Controller
 {
     public function __invoke(Item $item, Request $request, CartInstanceManager $cartInstanceManager)
     {
